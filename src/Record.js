@@ -113,7 +113,7 @@ export default function Record({
     localImage.wrapT = RepeatWrapping;
     localImage.repeat.x = -1;
     localImage.repeat.y = 9;
-    spineMaterial.emissiveMap = localImage;
+    spineMaterial.map = localImage;
   }
   return (
     <Selection>
