@@ -23,22 +23,16 @@ export default function Record({
   ...props
 }) {
   const { nodes } = useGLTF(RecordGLB);
-  console.log(nodes);
   const coverLoader = new TextureLoader();
   coverLoader.needsUpdate = true;
   const placeholderCover = coverLoader.load(PlaceholderCover);
   placeholderCover.flipY = false;
-  placeholderCover.encoding = nodes.Cube001.material.map.encoding;
 
   const coverMaterial = new MeshStandardMaterial({
     name: "Cover",
     map: placeholderCover,
-    side: nodes.Cube001.material.side,
-    roughness: isReflaction === true ? nodes.Cube001.material.roughness : 1,
+    roughness: isReflaction === true ? 0.3 : 1,
     metalness: isReflaction === true ? 1 : 0,
-    // For embossing the cover
-    // normalMap: nodes.Cube003.material.normalMap,
-    // normalScale: nodes.Cube003.material.normalScale,
   });
 
   if (cover) {
@@ -46,8 +40,7 @@ export default function Record({
     localImage.flipY = false;
     localImage.encoding = nodes.Cube001.material.map.encoding;
     coverMaterial.map = localImage;
-    coverMaterial.roughness =
-      isReflaction === true ? nodes.Cube001.material.roughness : 1;
+    coverMaterial.roughness = isReflaction === true ? 0.3 : 1;
     coverMaterial.metalness = isReflaction === true ? 1 : 0;
     placeholderCover.dispose();
   }
@@ -65,17 +58,13 @@ export default function Record({
   caseEmboss.flipY = true;
   caseEmboss.wrapS = RepeatWrapping;
   caseEmboss.repeat.x = -1;
-  caseEmboss.encoding = nodes.Cube001_2.material.map.encoding;
 
   const metadataMaterial = new MeshPhysicalMaterial({
     name: "Metadata",
     map: placeholderMetadata,
     normalMap: caseEmboss,
-    // roughness: nodes.Cube001_2.material.roughness,
-    roughness: isReflaction === true ? nodes.Cube001_2.material.roughness : 1,
+    roughness: isReflaction === true ? 0.3 : 1,
     metalness: isReflaction === true ? 1 : 0,
-    normalScale: nodes.Cube001_2.material.normalScale,
-    clearcoatNormalScale: nodes.Cube001_2.material.clearcoatNormalScale,
   });
 
   if (metadata) {
@@ -90,7 +79,6 @@ export default function Record({
 
   const gifLoader = new GifLoader();
   const spineTexture = gifLoader.load(SpineTitleGif);
-  // spineTexture.mapping = THREE.UVMapping;
   spineTexture.flipY = true;
   spineTexture.rotation = Math.PI;
   spineTexture.wrapS = RepeatWrapping;
