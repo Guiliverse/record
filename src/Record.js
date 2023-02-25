@@ -15,13 +15,7 @@ import PlaceholderMetadata from "./assets/metadata.png";
 import CaseEmboss from "./assets/case-emboss.png";
 import SpineTitleGif from "./assets/SpineTitleGif.gif";
 
-export default function Record({
-  cover,
-  metadata,
-  spine,
-  isReflaction,
-  ...props
-}) {
+export default function Record({ cover, metadata, spine, ...props }) {
   const { nodes } = useGLTF(RecordGLB);
   const coverLoader = new TextureLoader();
   coverLoader.needsUpdate = true;
@@ -31,17 +25,14 @@ export default function Record({
   const coverMaterial = new MeshStandardMaterial({
     name: "Cover",
     map: placeholderCover,
-    roughness: isReflaction === true ? 0.3 : 1,
-    metalness: isReflaction === true ? 1 : 0,
+    side: nodes.Cube001.material.side,
+    roughness: nodes.Cube001.material.roughness,
   });
 
   if (cover) {
     const localImage = coverLoader.load(cover);
     localImage.flipY = false;
-    localImage.encoding = nodes.Cube001.material.map.encoding;
     coverMaterial.map = localImage;
-    coverMaterial.roughness = isReflaction === true ? 0.3 : 1;
-    coverMaterial.metalness = isReflaction === true ? 1 : 0;
     placeholderCover.dispose();
   }
 
@@ -63,8 +54,9 @@ export default function Record({
     name: "Metadata",
     map: placeholderMetadata,
     normalMap: caseEmboss,
-    roughness: isReflaction === true ? 0.3 : 1,
-    metalness: isReflaction === true ? 1 : 0,
+    roughness: nodes.Cube001_2.material.roughness,
+    normalScale: nodes.Cube001_2.material.normalScale,
+    clearcoatNormalScale: nodes.Cube001_2.material.clearcoatNormalScale,
   });
 
   if (metadata) {
@@ -72,7 +64,6 @@ export default function Record({
     localImage.flipY = true;
     localImage.wrapS = RepeatWrapping;
     localImage.repeat.x = -1;
-    localImage.encoding = nodes.Cube001_2.material.map.encoding;
     metadataMaterial.map = localImage;
     placeholderMetadata.dispose();
   }
@@ -89,9 +80,8 @@ export default function Record({
   const spineMaterial = new MeshPhysicalMaterial({
     name: "Spine",
     map: spineTexture,
-    roughness: isReflaction === true ? 0.3 : 1,
-    metalness: isReflaction === true ? 1 : 0,
   });
+
   spineMaterial.dispose();
   if (spine) {
     const localImage = gifLoader.load(spine);
@@ -148,6 +138,7 @@ export default function Record({
             {/* Cube003 - Front Artwork */}
             <mesh geometry={nodes.Cube001.geometry} material={coverMaterial} />
             {/* Cube003_1 - Front Case */}
+
             {/* Cylinder002 - Holographic Stamp */}
             <mesh {...nodes.Cylinder002} />
           </group>

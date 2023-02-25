@@ -13,15 +13,12 @@ export default function App() {
     defaultDark ? "dark" : "light"
   );
   const [isRotating, setIsRotating] = useState(false);
-  const [isReflaction, setIsReflaction] = useState(false);
 
   const switchTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
   };
-  const switchReflaction = () => {
-    isReflaction === false ? setIsReflaction(true) : setIsReflaction(false);
-  };
+
   const handleRotation = () => {
     setIsRotating(!isRotating);
   };
@@ -76,9 +73,6 @@ export default function App() {
             accept="image/gif"
             onChange={handleSpineChange}
           />
-          <button onClick={() => switchReflaction()}>
-            {isReflaction === false ? "Reflactive" : "Matte"} Material
-          </button>
         </div>
         <div className="appearance">
           <button onClick={() => handleRotation()}>
@@ -92,12 +86,7 @@ export default function App() {
       <Canvas>
         <Suspense fallback={null}>
           <Environment preset="warehouse" />
-          <Record
-            isReflaction={isReflaction}
-            cover={cover}
-            spine={spine}
-            metadata={metadata}
-          />
+          <Record cover={cover} spine={spine} metadata={metadata} />
         </Suspense>
         <OrbitControls
           enablePan={false}
