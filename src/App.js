@@ -1,7 +1,8 @@
 import React, { Suspense, useState } from "react";
 import { Environment, OrbitControls } from "@react-three/drei";
-import useLocalStorage from "use-local-storage";
 import { Canvas } from "@react-three/fiber";
+import useLocalStorage from "use-local-storage";
+
 import Record from "./Record";
 
 import "./styles.css";
@@ -70,7 +71,7 @@ export default function App() {
           <input
             id="spine"
             type="file"
-            accept="image/gif"
+            accept="image/*"
             onChange={handleSpineChange}
           />
         </div>

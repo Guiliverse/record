@@ -1,6 +1,5 @@
 import React from "react";
 import { Select, useGLTF } from "@react-three/drei";
-import GifLoader from "three-gif-loader";
 import { EffectComposer, Bloom, Selection } from "@react-three/postprocessing";
 import {
   TextureLoader,
@@ -13,7 +12,7 @@ import RecordGLB from "./assets/RECORD.glb";
 import PlaceholderCover from "./assets/another.png";
 import PlaceholderMetadata from "./assets/metadata.png";
 import CaseEmboss from "./assets/case-emboss.png";
-import SpineTitleGif from "./assets/SpineTitleGif.gif";
+import PlaceholderSpine from "./assets/side-panel-label.png";
 
 export default function Record({ cover, metadata, spine, ...props }) {
   const { nodes } = useGLTF(RecordGLB);
@@ -67,31 +66,37 @@ export default function Record({ cover, metadata, spine, ...props }) {
     metadataMaterial.map = localImage;
     placeholderMetadata.dispose();
   }
-
-  const gifLoader = new GifLoader();
-  const spineTexture = gifLoader.load(SpineTitleGif);
-  spineTexture.flipY = true;
-  spineTexture.rotation = Math.PI;
-  spineTexture.wrapS = RepeatWrapping;
-  spineTexture.wrapT = RepeatWrapping;
-  spineTexture.repeat.x = -1;
-  spineTexture.repeat.y = 9;
+  const spineLoader = new TextureLoader();
+  spineLoader.needsUpdate = true;
+  const placeholderSpine = spineLoader.load(PlaceholderSpine);
+  placeholderSpine.flipY = true;
+  placeholderSpine.wrapS = RepeatWrapping;
+  placeholderSpine.wrapT = RepeatWrapping;
+  placeholderSpine.repeat.y = -1;
 
   const spineMaterial = new MeshPhysicalMaterial({
     name: "Spine",
-    map: spineTexture,
+    emissiveMap: placeholderSpine,
+    userData: nodes.Cube001_1.material.userData,
+    normalScale: nodes.Cube001_1.material.normalScale,
+    specularColor: nodes.Cube001_1.material.specularColor,
+    clearcoatNormalScale: nodes.Cube001_1.material.clearcoatNormalScale,
+    color: nodes.Cube001_1.material.color,
+    emissive: nodes.Cube001_1.material.emissive,
+    roughness: nodes.Cube001_1.material.roughness,
+    side: nodes.Cube001_1.material.side,
+    ior: nodes.Cube001_1.material.ior,
   });
 
   spineMaterial.dispose();
   if (spine) {
-    const localImage = gifLoader.load(spine);
+    const localImage = spineLoader.load(spine);
     localImage.flipY = true;
-    localImage.rotation = Math.PI;
     localImage.wrapS = RepeatWrapping;
     localImage.wrapT = RepeatWrapping;
-    localImage.repeat.x = -1;
-    localImage.repeat.y = 9;
-    spineMaterial.map = localImage;
+    localImage.repeat.y = -1;
+    spineMaterial.emissiveMap = localImage;
+    placeholderSpine.dispose();
   }
   return (
     <Selection>
