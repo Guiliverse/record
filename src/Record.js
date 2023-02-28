@@ -32,7 +32,9 @@ export default function Record({ cover, metadata, spine, ...props }) {
     const localImage = coverLoader.load(cover);
     localImage.flipY = false;
     coverMaterial.map = localImage;
+    localImage.encoding = 3001;
     placeholderCover.dispose();
+
   }
 
   const metadataLoader = new TextureLoader();
